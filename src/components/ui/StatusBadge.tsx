@@ -12,27 +12,27 @@ export function StatusBadge({ status, className = '' }: StatusBadgeProps) {
     case 'Reported':
       return (
         <span
-          className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold bg-blue-100 text-blue-800 border border-blue-300 dark:bg-blue-950/80 dark:text-blue-300 dark:border-blue-800 ${className}`}
+          className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-[#e0e7ff] text-[#3730a3] border border-[#c7d2fe] dark:bg-[#1e1b4b]/60 dark:text-[#a5b4fc] dark:border-[#4338ca]/80 shadow-sm ${className}`}
         >
-          <Send className="w-3.5 h-3.5 text-blue-600 dark:text-blue-400 shrink-0" />
+          <Send className="w-3.5 h-3.5 text-[#4338ca] dark:text-[#a5b4fc] shrink-0" />
           <span>Reported</span>
         </span>
       );
     case 'In Progress':
       return (
         <span
-          className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold bg-amber-100 text-amber-800 border border-amber-300 dark:bg-amber-950/80 dark:text-amber-300 dark:border-amber-800 ${className}`}
+          className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-[#fff7ed] text-[#c2410c] border border-[#ffedd5] dark:bg-[#431407]/60 dark:text-[#fdba74] dark:border-[#9a3412]/80 shadow-sm ${className}`}
         >
-          <Wrench className="w-3.5 h-3.5 text-amber-600 dark:text-amber-400 shrink-0 animate-pulse" />
+          <Wrench className="w-3.5 h-3.5 text-[#ea580c] dark:text-[#fb923c] shrink-0 animate-spin" />
           <span>In Progress</span>
         </span>
       );
     case 'Resolved':
       return (
         <span
-          className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold bg-emerald-100 text-emerald-800 border border-emerald-300 dark:bg-emerald-950/80 dark:text-emerald-300 dark:border-emerald-800 ${className}`}
+          className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-[#ecfdf5] text-[#065f46] border border-[#a7f3d0] dark:bg-[#064e3b]/60 dark:text-[#6ee7b7] dark:border-[#047857]/80 shadow-sm ${className}`}
         >
-          <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400 shrink-0" />
+          <CheckCircle2 className="w-3.5 h-3.5 text-[#059669] dark:text-[#34d399] shrink-0" />
           <span>Resolved</span>
         </span>
       );

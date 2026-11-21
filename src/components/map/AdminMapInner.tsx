@@ -8,17 +8,18 @@ import type { Issue } from '@/lib/domain/types';
 import { PriorityBadge } from '@/components/ui/PriorityBadge';
 import { StatusBadge } from '@/components/ui/StatusBadge';
 
+// Semantic priority colors matching WCAG AA palette
 function getPriorityColor(priority: string): string {
   switch (priority) {
     case 'Critical':
-      return '#DC2626';
+      return '#991b1b'; // deep crimson
     case 'High':
-      return '#EA580C';
+      return '#9a3412'; // amber-orange
     case 'Medium':
-      return '#D97706';
+      return '#854d0e'; // golden yellow
     case 'Low':
     default:
-      return '#16A34A';
+      return '#166534'; // sage green
   }
 }
 
@@ -26,10 +27,10 @@ function createPriorityIcon(priority: string) {
   const color = getPriorityColor(priority);
   return L.divIcon({
     className: 'custom-priority-pin',
-    html: `<div style="background-color: ${color}; width: 28px; height: 28px; border-radius: 50% 50% 50% 0; transform: rotate(-45deg); display: flex; align-items: center; justify-content: center; border: 2.5px solid white; box-shadow: 0 3px 6px rgba(0,0,0,0.35);"><div style="width: 8px; height: 8px; background: white; border-radius: 50%; transform: rotate(45deg);"></div></div>`,
-    iconSize: [28, 28],
-    iconAnchor: [14, 28],
-    popupAnchor: [0, -28],
+    html: `<div style="background-color: ${color}; width: 30px; height: 30px; border-radius: 50% 50% 50% 0; transform: rotate(-45deg); display: flex; align-items: center; justify-content: center; border: 2.5px solid #14213d; box-shadow: 0 4px 10px rgba(20,33,61,0.4);"><div style="width: 8px; height: 8px; background: #f4ede0; border-radius: 50%; transform: rotate(45deg);"></div></div>`,
+    iconSize: [30, 30],
+    iconAnchor: [15, 30],
+    popupAnchor: [0, -30],
   });
 }
 
@@ -38,7 +39,7 @@ export default function AdminMapInner({ issues }: { issues: Issue[] }) {
   const defaultCenter: [number, number] = [11.0147, 76.9557];
 
   return (
-    <div className="w-full h-[650px] rounded-xl overflow-hidden border border-slate-200 dark:border-slate-800 shadow-md">
+    <div className="w-full h-[650px] rounded-[24px] overflow-hidden border border-[#14213d]/15 dark:border-white/15 shadow-md">
       <MapContainer
         center={defaultCenter}
         zoom={13}

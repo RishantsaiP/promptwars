@@ -4,11 +4,9 @@ import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import {
   Wrench,
-  CheckCircle2,
   Building2,
   AlertTriangle,
   Layers,
-  ShieldAlert,
   Loader2,
   Save,
   Check,
@@ -76,30 +74,30 @@ export function IssueActionPanel({ issue }: { issue: Issue }) {
   return (
     <form
       onSubmit={handleSave}
-      className="p-6 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm space-y-5"
+      className="p-6 rounded-[24px] bg-white dark:bg-[#14213d] border border-[#14213d]/15 dark:border-white/15 shadow-md space-y-5"
     >
-      <div className="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-3">
-        <h3 className="font-extrabold text-sm text-slate-900 dark:text-white uppercase tracking-wider flex items-center gap-2">
-          <Wrench className="w-4 h-4 text-emerald-600" />
+      <div className="flex items-center justify-between border-b border-[#14213d]/10 dark:border-white/10 pb-3">
+        <h3 className="font-bold text-xs text-[#14213d] dark:text-[#f4ede0] uppercase tracking-wider flex items-center gap-2">
+          <Wrench className="w-4 h-4 text-[#ff6b5b]" />
           Supervisor Actions & Triage Overrides
         </h3>
         {savedSuccess && (
-          <span className="inline-flex items-center gap-1 text-xs font-bold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded">
+          <span className="inline-flex items-center gap-1 text-xs font-bold text-[#166534] bg-[#166534]/10 px-2.5 py-0.5 rounded-full border border-[#166534]/30">
             <Check className="w-3.5 h-3.5" /> Saved!
           </span>
         )}
       </div>
 
       {errorMsg && (
-        <div className="p-3 rounded-lg bg-red-50 text-red-800 text-xs flex items-center gap-2">
-          <AlertTriangle className="w-4 h-4 text-red-600" />
+        <div className="p-3 rounded-full bg-[#991b1b]/10 text-[#991b1b] dark:text-[#fca5a5] text-xs flex items-center gap-2 border border-[#991b1b]/30">
+          <AlertTriangle className="w-4 h-4 text-[#991b1b]" />
           <span>{errorMsg}</span>
         </div>
       )}
 
       {/* 1. Status Update Section */}
       <div>
-        <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5">
+        <label className="block text-xs font-bold text-[#14213d]/80 dark:text-[#f4ede0]/80 mb-2">
           Workflow Redressal Status:
         </label>
         <div className="grid grid-cols-3 gap-2">
@@ -108,14 +106,14 @@ export function IssueActionPanel({ issue }: { issue: Issue }) {
               key={s}
               type="button"
               onClick={() => setStatus(s)}
-              className={`py-2 px-3 rounded-xl text-xs font-bold border text-center transition-all ${
+              className={`py-2 px-3 rounded-full text-xs font-bold border text-center transition-all ${
                 status === s
                   ? s === 'Resolved'
-                    ? 'bg-emerald-600 text-white border-emerald-600 shadow-sm'
+                    ? 'bg-[#166534] text-white border-[#166534] shadow-sm'
                     : s === 'In Progress'
-                    ? 'bg-amber-500 text-white border-amber-500 shadow-sm'
-                    : 'bg-blue-600 text-white border-blue-600 shadow-sm'
-                  : 'bg-slate-50 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border-slate-200 dark:border-slate-700'
+                    ? 'bg-[#ff6b5b] text-[#14213d] border-[#ff6b5b] shadow-sm'
+                    : 'bg-[#3b82f6] text-white border-[#3b82f6] shadow-sm'
+                  : 'bg-[#f4ede0]/40 dark:bg-white/5 text-[#14213d] dark:text-[#f4ede0] border-[#14213d]/15 dark:border-white/15 hover:border-[#ff6b5b]'
               }`}
             >
               {s}
@@ -126,7 +124,7 @@ export function IssueActionPanel({ issue }: { issue: Issue }) {
 
       {/* Status History Note */}
       <div>
-        <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1">
+        <label className="block text-xs font-bold text-[#14213d]/80 dark:text-[#f4ede0]/80 mb-1.5">
           Supervisor Action Note:
         </label>
         <input
@@ -134,20 +132,20 @@ export function IssueActionPanel({ issue }: { issue: Issue }) {
           value={statusNote}
           onChange={(e) => setStatusNote(e.target.value)}
           placeholder="e.g. Ward 12 crew deployed with asphalt roller; repair verified."
-          className="w-full p-2.5 text-xs rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white outline-none focus:ring-2 focus:ring-emerald-500"
+          className="w-full p-2.5 px-3.5 text-xs rounded-full border border-[#14213d]/15 dark:border-white/15 bg-[#f4ede0]/30 dark:bg-black/30 text-[#14213d] dark:text-[#f4ede0] outline-none focus:ring-2 focus:ring-[#ff6b5b]"
         />
       </div>
 
       {/* 2. Reassign Department */}
       <div>
-        <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1 flex items-center gap-1">
-          <Building2 className="w-3.5 h-3.5 text-slate-500" />
+        <label className="block text-xs font-bold text-[#14213d]/80 dark:text-[#f4ede0]/80 mb-1.5 flex items-center gap-1">
+          <Building2 className="w-3.5 h-3.5 text-[#ff6b5b]" />
           Reassign Municipal Department:
         </label>
         <select
           value={department}
           onChange={(e) => setDepartment(e.target.value as Department)}
-          className="w-full p-2.5 text-xs rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white outline-none"
+          className="w-full p-2.5 px-3.5 text-xs rounded-full border border-[#14213d]/15 dark:border-white/15 bg-[#f4ede0]/30 dark:bg-black/30 text-[#14213d] dark:text-[#f4ede0] outline-none"
         >
           {DEPARTMENTS.map((d) => (
             <option key={d} value={d}>
@@ -158,16 +156,16 @@ export function IssueActionPanel({ issue }: { issue: Issue }) {
       </div>
 
       {/* 3. Priority & Category Override */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2 border-t border-slate-100 dark:border-slate-800">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2 border-t border-[#14213d]/10 dark:border-white/10">
         <div>
-          <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1 flex items-center gap-1">
-            <AlertTriangle className="w-3.5 h-3.5 text-slate-500" />
+          <label className="block text-xs font-bold text-[#14213d]/80 dark:text-[#f4ede0]/80 mb-1.5 flex items-center gap-1">
+            <AlertTriangle className="w-3.5 h-3.5 text-[#ff6b5b]" />
             Priority Override:
           </label>
           <select
             value={priority}
             onChange={(e) => setPriority(e.target.value as Priority)}
-            className="w-full p-2.5 text-xs rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white outline-none"
+            className="w-full p-2.5 px-3.5 text-xs rounded-full border border-[#14213d]/15 dark:border-white/15 bg-[#f4ede0]/30 dark:bg-black/30 text-[#14213d] dark:text-[#f4ede0] outline-none"
           >
             {PRIORITIES.map((p) => (
               <option key={p} value={p}>
@@ -178,14 +176,14 @@ export function IssueActionPanel({ issue }: { issue: Issue }) {
         </div>
 
         <div>
-          <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1 flex items-center gap-1">
-            <Layers className="w-3.5 h-3.5 text-slate-500" />
+          <label className="block text-xs font-bold text-[#14213d]/80 dark:text-[#f4ede0]/80 mb-1.5 flex items-center gap-1">
+            <Layers className="w-3.5 h-3.5 text-[#ff6b5b]" />
             Category Override:
           </label>
           <select
             value={category}
             onChange={(e) => setCategory(e.target.value as Category)}
-            className="w-full p-2.5 text-xs rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white outline-none"
+            className="w-full p-2.5 px-3.5 text-xs rounded-full border border-[#14213d]/15 dark:border-white/15 bg-[#f4ede0]/30 dark:bg-black/30 text-[#14213d] dark:text-[#f4ede0] outline-none"
           >
             {CATEGORIES.map((c) => (
               <option key={c} value={c}>
@@ -197,19 +195,19 @@ export function IssueActionPanel({ issue }: { issue: Issue }) {
       </div>
 
       {isOverride && (
-        <div className="p-2.5 rounded-lg bg-amber-50 dark:bg-amber-950/60 border border-amber-300 dark:border-amber-800 text-[11px] text-amber-800 dark:text-amber-300">
+        <div className="p-3 rounded-full bg-amber-500/10 border border-amber-500/30 text-[11px] text-amber-800 dark:text-amber-300">
           ⚠️ Human supervisor override active (differs from initial AI triage recommendation).
         </div>
       )}
 
       {/* 4. Mark Spam Flag */}
-      <div className="flex items-center justify-between pt-2 border-t border-slate-100 dark:border-slate-800 text-xs">
-        <label className="font-semibold text-slate-700 dark:text-slate-300 flex items-center gap-1.5 cursor-pointer">
+      <div className="flex items-center justify-between pt-2 border-t border-[#14213d]/10 dark:border-white/10 text-xs">
+        <label className="font-semibold text-[#14213d]/80 dark:text-[#f4ede0]/80 flex items-center gap-2 cursor-pointer">
           <input
             type="checkbox"
             checked={isSpam}
             onChange={(e) => setIsSpam(e.target.checked)}
-            className="rounded text-emerald-600 focus:ring-emerald-500"
+            className="rounded text-[#ff6b5b] focus:ring-[#ff6b5b]"
           />
           <span>Flag complaint as invalid / spam</span>
         </label>
@@ -219,7 +217,7 @@ export function IssueActionPanel({ issue }: { issue: Issue }) {
       <button
         type="submit"
         disabled={saving}
-        className="w-full inline-flex items-center justify-center gap-2 py-3 px-4 rounded-xl font-bold text-xs text-white bg-emerald-800 hover:bg-emerald-900 shadow-md active:scale-98 transition-all disabled:opacity-50"
+        className="btn-coral w-full inline-flex items-center justify-center gap-2 py-3 px-6 rounded-full font-bold text-xs min-h-[46px] shadow-md shadow-[#ff6b5b]/20 active:scale-[0.98] transition-all disabled:opacity-50"
       >
         {saving ? <Loader2 className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />}
         <span>Save Status & Supervisor Changes</span>

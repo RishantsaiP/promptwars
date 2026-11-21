@@ -40,9 +40,15 @@ data/*.db-wal
 data/*.db-shm
 data/*.json
 
+# test results
+test-results/
+playwright-report/
+
 # vercel
 .vercel
 
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+.vercel

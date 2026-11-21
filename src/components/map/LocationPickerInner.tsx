@@ -5,13 +5,13 @@ import { MapContainer, TileLayer, Marker, useMap, useMapEvents } from 'react-lea
 import L from 'leaflet';
 import { Navigation, MapPin, Loader2 } from 'lucide-react';
 
-// Fix default Leaflet marker icons in React
+// Custom Leaflet marker with navy outline and coral accent per design system
 const customPinIcon = L.divIcon({
   className: 'custom-leaflet-marker',
-  html: `<div style="background-color: #1b4d3e; width: 32px; height: 32px; border-radius: 50% 50% 50% 0; transform: rotate(-45deg); display: flex; align-items: center; justify-content: center; border: 3px solid white; box-shadow: 0 4px 6px rgba(0,0,0,0.3);"><div style="width: 10px; height: 10px; background: white; border-radius: 50%; transform: rotate(45deg);"></div></div>`,
-  iconSize: [32, 32],
-  iconAnchor: [16, 32],
-  popupAnchor: [0, -32],
+  html: `<div style="background-color: #ff6b5b; width: 34px; height: 34px; border-radius: 50% 50% 50% 0; transform: rotate(-45deg); display: flex; align-items: center; justify-content: center; border: 3px solid #14213d; box-shadow: 0 4px 10px rgba(20,33,61,0.35);"><div style="width: 10px; height: 10px; background: #14213d; border-radius: 50%; transform: rotate(45deg);"></div></div>`,
+  iconSize: [34, 34],
+  iconAnchor: [17, 34],
+  popupAnchor: [0, -34],
 });
 
 interface LocationPickerInnerProps {
@@ -123,7 +123,7 @@ export default function LocationPickerInner({
   };
 
   return (
-    <div className="relative w-full h-72 sm:h-80 rounded-xl overflow-hidden border border-slate-300 dark:border-slate-700 shadow-inner">
+    <div className="relative w-full h-72 sm:h-80 rounded-[24px] overflow-hidden border border-[#14213d]/15 dark:border-white/15 shadow-inner">
       <MapContainer
         center={[latitude, longitude]}
         zoom={14}
@@ -144,20 +144,20 @@ export default function LocationPickerInner({
           type="button"
           onClick={handleCurrentLocation}
           disabled={geolocating}
-          className="flex items-center gap-1.5 px-3 py-2 bg-white dark:bg-slate-800 text-slate-800 dark:text-white rounded-lg shadow-md border border-slate-200 dark:border-slate-700 text-xs font-semibold hover:bg-slate-50 dark:hover:bg-slate-700 active:scale-95 transition-all"
+          className="flex items-center gap-1.5 px-3.5 py-2.5 bg-[#fcf9f4] dark:bg-[#14213d] text-[#14213d] dark:text-[#f4ede0] rounded-full shadow-md border border-[#14213d]/15 dark:border-white/15 text-xs font-semibold hover:bg-[#f4ede0] dark:hover:bg-[#1f3156] active:scale-95 transition-all"
         >
           {geolocating ? (
-            <Loader2 className="w-4 h-4 animate-spin text-emerald-600" />
+            <Loader2 className="w-4 h-4 animate-spin text-[#ff6b5b]" />
           ) : (
-            <Navigation className="w-4 h-4 text-emerald-600" />
+            <Navigation className="w-4 h-4 text-[#ff6b5b]" />
           )}
           <span>{geolocating ? 'Locating...' : 'My Location'}</span>
         </button>
       </div>
 
       {/* Drag instruction pill */}
-      <div className="absolute bottom-2 left-2 z-[400] bg-black/70 backdrop-blur text-white text-[11px] px-2.5 py-1 rounded-md flex items-center gap-1 pointer-events-none">
-        <MapPin className="w-3 h-3 text-emerald-400" />
+      <div className="absolute bottom-2.5 left-2.5 z-[400] bg-[#14213d]/90 backdrop-blur text-[#f4ede0] text-[11px] px-3 py-1.5 rounded-full flex items-center gap-1.5 shadow-md pointer-events-none border border-white/10">
+        <MapPin className="w-3.5 h-3.5 text-[#ff6b5b]" />
         <span>
           {reverseGeocoding
             ? 'Fetching address text...'

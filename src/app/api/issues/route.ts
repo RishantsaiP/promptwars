@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import { z } from 'zod';
 import { getRepository } from '@/lib/db';
 import { checkRateLimit, getClientIp } from '@/lib/rate-limit';
+import type { Category, Department, Priority, Status } from '@/lib/domain/types';
 import { CATEGORIES, DEPARTMENTS, PRIORITIES, STATUSES } from '@/lib/domain/types';
 import { triageResponseSchema } from '@/lib/gemini/schemas';
 
@@ -37,16 +38,19 @@ export async function GET(req: Request) {
     const limitParam = searchParams.get('limit');
     const offsetParam = searchParams.get('offset');
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const filters: any = {};
-    if (statusParam && STATUSES.includes(statusParam as any)) filters.status = statusParam;
-    if (priorityParam && PRIORITIES.includes(priorityParam as any)) filters.priority = priorityParam;
-    if (departmentParam && DEPARTMENTS.includes(departmentParam as any)) filters.department = departmentParam;
-    if (categoryParam && CATEGORIES.includes(categoryParam as any)) filters.category = categoryParam;
+    const filters: Parameters<typeof repo.list>[0] = {};
+    if (statusParam && STATUSES.includes(statusParam as Status)) filters.status = statusParam as Status;
+    if (priorityParam && PRIORITIES.includes(priorityParam as Priority)) filters.priority = priorityParam as Priority;
+    if (departmentParam && DEPARTMENTS.includes(departmentParam as Department)) filters.department = departmentParam as Department;
+    if (categoryParam && CATEGORIES.includes(categoryParam as Category)) filters.category = categoryParam as Category;
     if (searchParam) filters.search = searchParam;
     if (deviceIdParam) filters.device_id = deviceIdParam;
-    if (sortByParam) filters.sort_by = sortByParam;
-    if (sortOrderParam) filters.sort_order = sortOrderParam;
+    if (sortByParam && ['urgency_score', 'created_at', 'updated_at'].includes(sortByParam)) {
+      filters.sort_by = sortByParam as 'urgency_score' | 'created_at' | 'updated_at';
+    }
+    if (sortOrderParam && ['asc', 'desc'].includes(sortOrderParam)) {
+      filters.sort_order = sortOrderParam as 'asc' | 'desc';
+    }
     if (limitParam) filters.limit = Math.min(100, Math.max(1, parseInt(limitParam, 10)));
     if (offsetParam) filters.offset = Math.max(0, parseInt(offsetParam, 10));
 

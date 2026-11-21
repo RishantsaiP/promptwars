@@ -1,0 +1,16 @@
+node_modules
+.next
+.git
+.gitignore
+.env.local
+.env*.local
+data/*.db*
+data/*.json
+tests
+test-results
+__tests__
+scripts
+project-docs
+*.log
+npm-debug.log*
+.DS_Store

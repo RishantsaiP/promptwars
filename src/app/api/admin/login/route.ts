@@ -5,9 +5,11 @@ import {
   SESSION_COOKIE_NAME,
   isDemoMode,
 } from '@/lib/auth/admin';
+import { checkRateLimit, getClientIp } from '@/lib/rate-limit';
 
 export async function POST(req: Request) {
   try {
+    const ip = getClientIp(req);
     const body = await req.json();
     const { password, action } = body;
 
@@ -22,6 +24,15 @@ export async function POST(req: Request) {
         maxAge: 0,
       });
       return response;
+    }
+
+    // Rate limit: max 10 admin login attempts per minute per IP
+    const isAllowed = checkRateLimit(`admin:login:${ip}`, 10, 60000);
+    if (!isAllowed) {
+      return NextResponse.json(
+        { error: 'Too many admin sign-in attempts. Please wait a minute and try again.' },
+        { status: 429 }
+      );
     }
 
     const expectedPassword = getAdminPassword();

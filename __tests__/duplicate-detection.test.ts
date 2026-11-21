@@ -1,10 +1,7 @@
 import { describe, it, expect, beforeEach } from 'vitest';
 import { JsonFileRepository } from '../src/lib/db/json-store';
-import fs from 'fs';
-import path from 'path';
 
 describe('Duplicate Detection & Priority Escalation', () => {
-  const testDbPath = path.join(process.cwd(), 'data', 'issues.json');
   let repo: JsonFileRepository;
 
   beforeEach(() => {

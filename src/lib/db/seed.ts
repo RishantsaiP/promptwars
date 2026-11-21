@@ -1,4 +1,4 @@
-import type { Issue, Category, Priority, Department, Status, TriageResult } from '../domain/types';
+import type { Issue, Category } from '../domain/types';
 
 function createSvgPlaceholder(title: string, category: Category, color: string): string {
   const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="600" height="400" viewBox="0 0 600 400">

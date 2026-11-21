@@ -1,4 +1,15 @@
 import type { TriageResult, Category, Priority, Department } from '../domain/types';
+
+// Simple language detection based on Unicode script ranges
+function detectLanguage(text: string): string {
+  const lower = text.toLowerCase();
+  // Tamil Unicode block
+  if (/[\u0B80-\u0BFF]/.test(lower)) return 'Tamil';
+  // Devanagari (Hindi) block
+  if (/[\u0900-\u097F]/.test(lower)) return 'Hindi';
+  return 'English';
+}
+
 import { getDefaultDepartment } from '../domain/departments';
 
 interface KeywordRule {
@@ -246,6 +257,7 @@ export function runFallbackClassifier(
   hasImage?: boolean
 ): TriageResult {
   const combined = `${title || ''} ${description || ''}`.toLowerCase();
+  const language = detectLanguage(combined);
 
   // 1. Detect Category
   let detectedCategory: Category = 'Other';
@@ -311,7 +323,7 @@ export function runFallbackClassifier(
     suggested_sla_hours: slaHours,
     suggested_title: title && title.trim().length > 3 ? title : `Civic issue: ${detectedCategory}`,
     cleaned_description_en: description.trim() || 'Civic complaint submitted by citizen.',
-    detected_language: 'Detected (Rule-based)',
+    detected_language: language,
     image_check: hasImage ? 'matches' : 'no_image',
     image_check_note: hasImage ? 'Image supplied; evaluated with rule-based heuristics.' : 'No photo provided.',
     possible_spam: combined.trim().length < 5,

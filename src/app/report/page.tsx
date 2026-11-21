@@ -4,17 +4,14 @@ import React, { useState, useRef, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import {
   Camera,
-  Upload,
   Sparkles,
   MapPin,
   Mic,
   MicOff,
   AlertCircle,
-  CheckCircle2,
   Trash2,
   Send,
   Loader2,
-  Info,
 } from 'lucide-react';
 import { LocationPicker } from '@/components/map/LocationPicker';
 import { AiTriageCard } from '@/components/citizen/AiTriageCard';
@@ -238,31 +235,95 @@ export default function ReportPage() {
     }
   };
 
+  const currentStep = triageResult ? 3 : description.trim() ? 2 : 1;
+
   return (
-    <div className="py-8 px-4 sm:px-6 lg:px-8 max-w-3xl mx-auto w-full">
+    <div className="py-8 px-4 sm:px-6 lg:px-8 max-w-3xl mx-auto w-full animate-fade-in-up">
       {/* Title & Introductory Header */}
       <div className="mb-6">
-        <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight">
-          Report a Civic Grievance
+        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#ff6b5b]/10 text-[#14213d] dark:text-[#f4ede0] border border-[#ff6b5b]/20 text-[11px] font-semibold tracking-wide uppercase mb-3 mt-4">
+          <span className="w-1.5 h-1.5 rounded-full bg-[#ff6b5b]" />
+          Coimbatore Municipal Corporation
+        </div>
+        <h1 className="text-3xl sm:text-4xl font-light text-[#14213d] dark:text-[#f4ede0] tracking-tight">
+          Report a <span className="font-normal italic text-[#ff6b5b]">Civic Grievance</span>
         </h1>
-        <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-400 mt-1">
-          Coimbatore Municipal Corporation • Potholes, sanitation, water leakage, streetlights
+        <p className="text-sm text-[#14213d]/70 dark:text-[#f4ede0]/70 mt-1 max-w-xl">
+          Submit photo evidence and details. Google Gemini triages urgency, category, and department dispatch in real time.
         </p>
       </div>
 
+      {/* Visual Step Indicator: 1. Photo & Location -> 2. Description -> 3. AI Triage */}
+      <div className="grid grid-cols-3 gap-2 p-1.5 rounded-full bg-[#e6dcce]/50 dark:bg-white/[0.05] border border-[#14213d]/10 dark:border-white/10 mb-8 text-xs font-medium">
+        <div
+          className={`flex items-center justify-center gap-1.5 py-2 px-3 rounded-full transition-all text-center ${
+            currentStep >= 1
+              ? 'bg-[#14213d] text-[#f4ede0] shadow-sm font-semibold'
+              : 'text-[#14213d]/60 dark:text-[#f4ede0]/60'
+          }`}
+        >
+          <span className="w-5 h-5 rounded-full bg-[#ff6b5b] text-[#14213d] font-bold text-[10px] flex items-center justify-center shrink-0">
+            1
+          </span>
+          <span className="truncate hidden sm:inline">Photo & Spot</span>
+          <span className="sm:hidden truncate">Photo</span>
+        </div>
+
+        <div
+          className={`flex items-center justify-center gap-1.5 py-2 px-3 rounded-full transition-all text-center ${
+            currentStep >= 2
+              ? 'bg-[#14213d] text-[#f4ede0] shadow-sm font-semibold'
+              : 'text-[#14213d]/60 dark:text-[#f4ede0]/60'
+          }`}
+        >
+          <span
+            className={`w-5 h-5 rounded-full font-bold text-[10px] flex items-center justify-center shrink-0 ${
+              currentStep >= 2 ? 'bg-[#ff6b5b] text-[#14213d]' : 'bg-[#14213d]/20 dark:bg-white/20'
+            }`}
+          >
+            2
+          </span>
+          <span className="truncate hidden sm:inline">Description</span>
+          <span className="sm:hidden truncate">Details</span>
+        </div>
+
+        <div
+          className={`flex items-center justify-center gap-1.5 py-2 px-3 rounded-full transition-all text-center ${
+            currentStep >= 3
+              ? 'bg-[#14213d] text-[#f4ede0] shadow-sm font-semibold'
+              : 'text-[#14213d]/60 dark:text-[#f4ede0]/60'
+          }`}
+        >
+          <span
+            className={`w-5 h-5 rounded-full font-bold text-[10px] flex items-center justify-center shrink-0 ${
+              currentStep >= 3 ? 'bg-[#ff6b5b] text-[#14213d]' : 'bg-[#14213d]/20 dark:bg-white/20'
+            }`}
+          >
+            3
+          </span>
+          <span className="truncate hidden sm:inline">AI Triage</span>
+          <span className="sm:hidden truncate">Triage</span>
+        </div>
+      </div>
+
       {errorMessage && (
-        <div className="p-4 rounded-xl bg-red-50 dark:bg-red-950/60 border border-red-300 dark:border-red-800 text-red-800 dark:text-red-300 text-xs flex items-center gap-2 mb-6">
-          <AlertCircle className="w-4 h-4 shrink-0 text-red-600" />
+        <div className="p-4 rounded-[20px] bg-[#991b1b]/10 border border-[#991b1b]/30 text-[#991b1b] dark:text-[#fca5a5] text-xs flex items-center gap-2.5 mb-6 shadow-sm">
+          <AlertCircle className="w-4 h-4 shrink-0 text-[#991b1b]" />
           <span>{errorMessage}</span>
         </div>
       )}
 
       <form onSubmit={handleSubmit} className="space-y-6">
         {/* Photo Upload & Camera Section */}
-        <div className="p-5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm">
-          <label className="block text-xs font-bold text-slate-800 dark:text-slate-200 uppercase tracking-wide mb-2 flex items-center justify-between">
-            <span>1. Photographic Evidence</span>
-            <span className="text-[11px] font-normal text-slate-500">Max 5 MB • Auto-resized</span>
+        <div className="p-6 rounded-[24px] bg-[#fcf9f4] dark:bg-white/[0.04] border border-[#14213d]/10 dark:border-white/10 shadow-sm space-y-3">
+          <label className="block text-xs font-bold text-[#14213d] dark:text-[#f4ede0] uppercase tracking-wider flex items-center justify-between">
+            <span className="flex items-center gap-2">
+              <Camera className="w-4 h-4 text-[#ff6b5b]" />
+              1. Photographic Evidence
+            </span>
+            <span className="text-[11px] font-normal text-[#14213d]/60 dark:text-[#f4ede0]/60">
+              Max 5 MB • Auto-resized
+            </span>
           </label>
 
           <input
@@ -275,7 +336,7 @@ export default function ReportPage() {
           />
 
           {imagePreview ? (
-            <div className="relative rounded-xl overflow-hidden border border-slate-200 dark:border-slate-700 bg-slate-950 flex items-center justify-center max-h-72">
+            <div className="relative rounded-[20px] overflow-hidden border border-[#14213d]/15 dark:border-white/15 bg-[#14213d] flex items-center justify-center max-h-72">
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 src={imagePreview}
@@ -288,7 +349,7 @@ export default function ReportPage() {
                   setImagePreview(null);
                   if (fileInputRef.current) fileInputRef.current.value = '';
                 }}
-                className="absolute top-2 right-2 p-2 rounded-lg bg-black/70 hover:bg-red-600 text-white transition-colors"
+                className="absolute top-3 right-3 p-2.5 rounded-full bg-[#14213d]/80 hover:bg-[#991b1b] text-white transition-colors shadow-md"
                 title="Remove photo"
               >
                 <Trash2 className="w-4 h-4" />
@@ -297,35 +358,35 @@ export default function ReportPage() {
           ) : (
             <div
               onClick={() => fileInputRef.current?.click()}
-              className="border-2 border-dashed border-slate-300 dark:border-slate-700 hover:border-emerald-500 rounded-xl p-6 sm:p-8 flex flex-col items-center justify-center cursor-pointer bg-slate-50/50 dark:bg-slate-800/30 transition-all hover:bg-emerald-50/30 group"
+              className="border-2 border-dashed border-[#14213d]/20 dark:border-white/20 hover:border-[#ff6b5b] rounded-[20px] p-8 flex flex-col items-center justify-center cursor-pointer bg-[#f4ede0]/40 dark:bg-white/[0.02] hover:bg-[#ff6b5b]/5 transition-all group min-h-[160px]"
             >
-              <div className="w-12 h-12 rounded-full bg-emerald-100 dark:bg-emerald-950 text-emerald-700 dark:text-emerald-300 flex items-center justify-center mb-2 group-hover:scale-110 transition-transform">
+              <div className="w-14 h-14 rounded-full bg-[#e6dcce] dark:bg-white/10 text-[#14213d] dark:text-[#f4ede0] flex items-center justify-center mb-3 group-hover:scale-105 group-hover:bg-[#ff6b5b] group-hover:text-[#14213d] transition-all">
                 <Camera className="w-6 h-6" />
               </div>
-              <span className="text-xs font-bold text-slate-700 dark:text-slate-200 mb-1">
+              <span className="text-sm font-semibold text-[#14213d] dark:text-[#f4ede0] mb-1">
                 Take Photo or Browse Gallery
               </span>
-              <p className="text-[11px] text-slate-500 text-center">
-                Gemini will inspect visual features to automatically estimate category and severity
+              <p className="text-xs text-[#14213d]/60 dark:text-[#f4ede0]/60 text-center max-w-sm">
+                Gemini Multimodal automatically detects category, hazards, and infrastructure tags from your photo
               </p>
             </div>
           )}
         </div>
 
         {/* Issue Details: Description & Title */}
-        <div className="p-5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm space-y-4">
+        <div className="p-6 rounded-[24px] bg-[#fcf9f4] dark:bg-white/[0.04] border border-[#14213d]/10 dark:border-white/10 shadow-sm space-y-4">
           <div>
-            <div className="flex items-center justify-between mb-1.5">
-              <label className="text-xs font-bold text-slate-800 dark:text-slate-200 uppercase tracking-wide">
+            <div className="flex items-center justify-between mb-2">
+              <label className="text-xs font-bold text-[#14213d] dark:text-[#f4ede0] uppercase tracking-wider">
                 2. Complaint Description
               </label>
 
               {/* Voice Dictation (P1) */}
-              <div className="flex items-center gap-1.5">
+              <div className="flex items-center gap-2">
                 <select
                   value={speechLanguage}
                   onChange={(e) => setSpeechLanguage(e.target.value as 'en-IN' | 'ta-IN' | 'hi-IN')}
-                  className="text-[10px] bg-slate-100 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded px-1.5 py-0.5 text-slate-700 dark:text-slate-300"
+                  className="text-xs bg-[#e6dcce]/60 dark:bg-white/10 border border-[#14213d]/15 dark:border-white/15 rounded-full px-2.5 py-1 text-[#14213d] dark:text-[#f4ede0] outline-none"
                   title="Voice dictation language"
                 >
                   <option value="en-IN">English</option>
@@ -336,14 +397,14 @@ export default function ReportPage() {
                 <button
                   type="button"
                   onClick={toggleVoiceDictation}
-                  className={`flex items-center gap-1 px-2.5 py-1 rounded-md text-xs font-semibold transition-colors ${
+                  className={`flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold transition-all ${
                     isListening
-                      ? 'bg-red-500 text-white animate-pulse'
-                      : 'bg-emerald-100 dark:bg-emerald-950 text-emerald-800 dark:text-emerald-300 hover:bg-emerald-200'
+                      ? 'bg-[#991b1b] text-white animate-pulse'
+                      : 'bg-[#e6dcce] dark:bg-white/10 text-[#14213d] dark:text-[#f4ede0] hover:bg-[#d8ccbc] dark:hover:bg-white/20'
                   }`}
                   title="Voice to text"
                 >
-                  {isListening ? <MicOff className="w-3.5 h-3.5" /> : <Mic className="w-3.5 h-3.5" />}
+                  {isListening ? <MicOff className="w-3.5 h-3.5" /> : <Mic className="w-3.5 h-3.5 text-[#ff6b5b]" />}
                   <span>{isListening ? 'Listening...' : 'Voice Dictate'}</span>
                 </button>
               </div>
@@ -354,12 +415,12 @@ export default function ReportPage() {
               value={description}
               onChange={(e) => setDescription(e.target.value)}
               placeholder="Describe what is broken, hazardous, or overflowing. English, Tamil (தமிழ்), or Hindi (हिन्दी) supported..."
-              className="w-full p-3 text-xs sm:text-sm rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white focus:ring-2 focus:ring-emerald-500 outline-none leading-relaxed"
+              className="w-full min-h-[100px] p-4 text-sm rounded-[18px] border border-[#14213d]/15 dark:border-white/15 bg-white dark:bg-[#14213d]/70 text-[#14213d] dark:text-[#f4ede0] placeholder:text-[#14213d]/40 dark:placeholder:text-[#f4ede0]/40 focus:ring-2 focus:ring-[#ff6b5b] focus:border-transparent outline-none leading-relaxed transition-all"
             />
           </div>
 
           <div>
-            <label className="block text-xs font-bold text-slate-800 dark:text-slate-200 uppercase tracking-wide mb-1">
+            <label className="block text-xs font-bold text-[#14213d] dark:text-[#f4ede0] uppercase tracking-wider mb-1.5">
               Title / Short Summary (Optional)
             </label>
             <input
@@ -367,18 +428,18 @@ export default function ReportPage() {
               value={title}
               onChange={(e) => setTitle(e.target.value)}
               placeholder="e.g. Deep pothole outside Gandhipuram bus terminal"
-              className="w-full p-2.5 text-xs sm:text-sm rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white focus:ring-2 focus:ring-emerald-500 outline-none"
+              className="w-full min-h-[48px] px-4 py-2.5 text-sm rounded-[16px] border border-[#14213d]/15 dark:border-white/15 bg-white dark:bg-[#14213d]/70 text-[#14213d] dark:text-[#f4ede0] placeholder:text-[#14213d]/40 dark:placeholder:text-[#f4ede0]/40 focus:ring-2 focus:ring-[#ff6b5b] focus:border-transparent outline-none transition-all"
             />
           </div>
 
           <div>
-            <label className="block text-xs font-bold text-slate-800 dark:text-slate-200 uppercase tracking-wide mb-1">
+            <label className="block text-xs font-bold text-[#14213d] dark:text-[#f4ede0] uppercase tracking-wider mb-1.5">
               Category
             </label>
             <select
               value={selectedCategory}
               onChange={(e) => setSelectedCategory(e.target.value)}
-              className="w-full p-2.5 text-xs sm:text-sm rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white focus:ring-2 focus:ring-emerald-500 outline-none"
+              className="w-full min-h-[48px] px-4 py-2.5 text-sm rounded-[16px] border border-[#14213d]/15 dark:border-white/15 bg-white dark:bg-[#14213d]/70 text-[#14213d] dark:text-[#f4ede0] focus:ring-2 focus:ring-[#ff6b5b] focus:border-transparent outline-none transition-all"
             >
               <option value="auto">✨ Let Gemini AI Decide (Recommended)</option>
               {CATEGORIES.map((cat) => (
@@ -391,13 +452,13 @@ export default function ReportPage() {
         </div>
 
         {/* Location Picker Section */}
-        <div className="p-5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm space-y-3">
-          <label className="block text-xs font-bold text-slate-800 dark:text-slate-200 uppercase tracking-wide flex items-center justify-between">
-            <span className="flex items-center gap-1.5">
-              <MapPin className="w-3.5 h-3.5 text-emerald-600" />
+        <div className="p-6 rounded-[24px] bg-[#fcf9f4] dark:bg-white/[0.04] border border-[#14213d]/10 dark:border-white/10 shadow-sm space-y-4">
+          <label className="block text-xs font-bold text-[#14213d] dark:text-[#f4ede0] uppercase tracking-wider flex items-center justify-between">
+            <span className="flex items-center gap-2">
+              <MapPin className="w-4 h-4 text-[#ff6b5b]" />
               3. Incident Spot in Coimbatore
             </span>
-            <span className="text-[11px] font-mono font-normal text-slate-500">
+            <span className="text-xs font-mono font-medium text-[#14213d]/60 dark:text-[#f4ede0]/60">
               {latitude.toFixed(4)}° N, {longitude.toFixed(4)}° E
             </span>
           </label>
@@ -413,14 +474,14 @@ export default function ReportPage() {
           />
 
           <div>
-            <label className="block text-[11px] font-semibold text-slate-500 mb-1">
+            <label className="block text-xs font-semibold text-[#14213d]/70 dark:text-[#f4ede0]/70 mb-1.5">
               Street Address / Landmark
             </label>
             <input
               type="text"
               value={address}
               onChange={(e) => setAddress(e.target.value)}
-              className="w-full p-2.5 text-xs rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white focus:ring-2 focus:ring-emerald-500 outline-none"
+              className="w-full min-h-[48px] px-4 py-2.5 text-sm rounded-[16px] border border-[#14213d]/15 dark:border-white/15 bg-white dark:bg-[#14213d]/70 text-[#14213d] dark:text-[#f4ede0] focus:ring-2 focus:ring-[#ff6b5b] focus:border-transparent outline-none transition-all"
               required
             />
           </div>
@@ -432,16 +493,16 @@ export default function ReportPage() {
             type="button"
             onClick={() => runTriageAnalysis()}
             disabled={analyzing || (!description.trim() && !imagePreview)}
-            className="w-full sm:w-auto flex-1 inline-flex items-center justify-center gap-2 px-5 py-3 rounded-xl font-bold text-xs sm:text-sm text-white bg-gradient-to-r from-emerald-700 to-teal-700 hover:from-emerald-800 hover:to-teal-800 shadow-md disabled:opacity-50 active:scale-95 transition-all"
+            className="w-full sm:w-auto flex-1 inline-flex items-center justify-center gap-2.5 px-6 min-h-[48px] rounded-full font-bold text-sm text-[#14213d] bg-[#f4ede0] hover:bg-[#e6dcce] dark:bg-white/10 dark:text-[#f4ede0] dark:hover:bg-white/20 border border-[#14213d]/15 dark:border-white/15 shadow-sm active:scale-95 transition-all disabled:opacity-50"
           >
             {analyzing ? (
               <>
-                <Loader2 className="w-4 h-4 animate-spin" />
+                <Loader2 className="w-4 h-4 animate-spin text-[#ff6b5b]" />
                 <span>Running Gemini Multimodal Triage...</span>
               </>
             ) : (
               <>
-                <Sparkles className="w-4 h-4 text-emerald-300" />
+                <Sparkles className="w-4 h-4 text-[#ff6b5b]" />
                 <span>Analyze with AI</span>
               </>
             )}
@@ -458,8 +519,8 @@ export default function ReportPage() {
         />
 
         {/* Optional Citizen Contact */}
-        <div className="p-4 rounded-xl bg-slate-100/60 dark:bg-slate-800/40 border border-slate-200 dark:border-slate-800 text-xs">
-          <label className="block font-semibold text-slate-700 dark:text-slate-300 mb-1">
+        <div className="p-5 rounded-[20px] bg-[#fcf9f4] dark:bg-white/[0.04] border border-[#14213d]/10 dark:border-white/10 text-xs space-y-2">
+          <label className="block font-semibold text-[#14213d] dark:text-[#f4ede0]">
             Phone / Email for SMS Status Updates (Optional)
           </label>
           <input
@@ -467,7 +528,7 @@ export default function ReportPage() {
             value={contact}
             onChange={(e) => setContact(e.target.value)}
             placeholder="e.g. 9842100000 or citizen@gmail.com"
-            className="w-full p-2 rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-900 dark:text-white outline-none text-xs"
+            className="w-full min-h-[44px] px-4 py-2 rounded-[14px] border border-[#14213d]/15 dark:border-white/15 bg-white dark:bg-[#14213d]/70 text-[#14213d] dark:text-[#f4ede0] placeholder:text-[#14213d]/40 dark:placeholder:text-[#f4ede0]/40 outline-none text-xs focus:ring-2 focus:ring-[#ff6b5b] transition-all"
           />
         </div>
 
@@ -476,7 +537,7 @@ export default function ReportPage() {
           <button
             type="submit"
             disabled={submitting}
-            className="w-full inline-flex items-center justify-center gap-2 py-4 px-6 rounded-2xl font-extrabold text-base text-slate-950 bg-gradient-to-r from-emerald-400 via-teal-300 to-emerald-400 hover:brightness-105 shadow-xl shadow-emerald-600/20 active:scale-98 transition-all disabled:opacity-50"
+            className="btn-coral w-full inline-flex items-center justify-center gap-2.5 py-4 px-8 rounded-full font-bold text-base min-h-[52px] shadow-lg shadow-[#ff6b5b]/25 active:scale-[0.98] transition-all disabled:opacity-50"
           >
             {submitting ? (
               <>
@@ -490,8 +551,8 @@ export default function ReportPage() {
               </>
             )}
           </button>
-          <p className="text-[11px] text-slate-500 text-center mt-2">
-            You will receive a permanent tracking code (CR-YYYY-NNNN) to monitor departmental progress.
+          <p className="text-xs text-[#14213d]/60 dark:text-[#f4ede0]/60 text-center mt-2.5">
+            You will receive a permanent tracking code (<span className="font-mono">CR-YYYY-NNNN</span>) to monitor departmental progress.
           </p>
         </div>
       </form>

@@ -3,15 +3,19 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
+    "eval": "tsx scripts/eval-triage.ts",
     "dev": "next dev",
     "build": "next build --webpack",
     "test": "vitest run",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "qa": "playwright test"
   },
   "dependencies": {
     "@google/genai": "^3.6.1",
-    "better-sqlite3": "^13.2.0",
+    "@tailwindcss/postcss": "^4.3.5",
+    "@types/bcryptjs": "^2.4.6",
+    "bcryptjs": "^3.0.3",
     "jose": "^6.2.18",
     "leaflet": "^1.9.4",
     "lucide-react": "^1.77.0",
@@ -23,7 +27,11 @@
     "uuid": "^14.0.3",
     "zod": "^4.6.7"
   },
+  "optionalDependencies": {
+    "better-sqlite3": "^13.2.0"
+  },
   "devDependencies": {
+    "@playwright/test": "^1.65.1",
     "@tailwindcss/turbopack": "4.3.3",
     "@types/better-sqlite3": "^9.6.0",
     "@types/leaflet": "^1.9.22",
@@ -34,6 +42,8 @@
     "eslint": "^9",
     "eslint-config-next": "16.4.6",
     "tailwindcss": "4.3.3",
+    "ts-node": "^10.9.2",
+    "tsx": "^4.23.15",
     "typescript": "^5",
     "vite": "^8.3.8",
     "vitest": "^5.1.1"

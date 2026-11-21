@@ -1,56 +1,335 @@
 @import "tailwindcss";
+@source "../";
 
 :root {
-  --background: #f8fafc;
-  --foreground: #0f172a;
-  --card: #ffffff;
-  --card-foreground: #0f172a;
-  --border: #e2e8f0;
-  --primary: #1b4d3e;
-  --primary-hover: #143a2f;
-  --accent: #d97706;
-  --muted: #64748b;
-  --muted-bg: #f1f5f9;
+  /* Navy Spectrum */
+  --navy: #14213d;
+  --navy-dark: #0c1322;
+  --navy-deep: #070c17;
+  --navy-light: #1f2f52;
+  --navy-subtle: #2b3e68;
+
+  /* Cream Spectrum */
+  --cream: #f4ede0;
+  --cream-light: #fbf8f3;
+  --cream-card: #f8f3ec;
+  --sand: #e6dcce;
+  --sand-muted: #d5c8b5;
+
+  /* Coral Accent Spectrum */
+  --coral: #ff6b5b;
+  --coral-hover: #e85545;
+  --coral-pressed: #cf4333;
+  --coral-text-safe: #b83224; /* WCAG AA on cream (5.12:1) */
+  --coral-pale: #fff1ef;
+  --coral-glow: rgba(255, 107, 91, 0.28);
+
+  /* Semantic Priorities (Strictly distinct from brand coral) */
+  --priority-critical: #991b1b;
+  --priority-critical-bg: #fee2e2;
+  --priority-high: #9a3412;
+  --priority-high-bg: #ffedd5;
+  --priority-medium: #854d0e;
+  --priority-medium-bg: #fef9c3;
+  --priority-low: #166534;
+  --priority-low-bg: #dcfce7;
+
+  /* Default Theme Tokens (Light mode: Cream base) */
+  --background: var(--cream);
+  --foreground: var(--navy);
+  --card-bg: var(--cream-card);
+  --card-border: rgba(20, 33, 61, 0.12);
+  --muted-text: #53627a;
+  --input-bg: #ffffff;
+  --input-border: #d5c8b5;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #090d16;
-    --foreground: #f1f5f9;
-    --card: #111827;
-    --card-foreground: #f1f5f9;
-    --border: #1f293d;
-    --primary: #2dd4bf;
-    --primary-hover: #14b8a6;
-    --accent: #f59e0b;
-    --muted: #94a3b8;
-    --muted-bg: #1e293b;
-  }
+/* Dark Theme Overrides (Navy base) */
+.dark,
+[data-theme="dark"] {
+  --background: var(--navy-dark);
+  --foreground: var(--cream);
+  --card-bg: rgba(31, 47, 82, 0.35);
+  --card-border: rgba(255, 255, 255, 0.12);
+  --muted-text: #a8b4c7;
+  --input-bg: rgba(12, 19, 34, 0.7);
+  --input-border: rgba(255, 255, 255, 0.16);
+
+  --priority-critical: #f87171;
+  --priority-critical-bg: rgba(153, 27, 27, 0.3);
+  --priority-high: #fb923c;
+  --priority-high-bg: rgba(154, 52, 18, 0.3);
+  --priority-medium: #fde047;
+  --priority-medium-bg: rgba(133, 77, 14, 0.3);
+  --priority-low: #86efac;
+  --priority-low-bg: rgba(22, 101, 52, 0.3);
 }
 
 body {
   background-color: var(--background);
   color: var(--foreground);
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  font-family: var(--font-sans), -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   min-height: 100vh;
   margin: 0;
   padding: 0;
+  overflow-x: hidden;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Atmosphere: Deep navy-to-coral glow gradient with fluted glass */
+.atmosphere {
+  position: relative;
+  background-color: #0a0e1a;
+  background-image:
+    /* Primary warm coral glow — large, strong, bottom-right */
+    radial-gradient(ellipse 72% 65% at 88% 80%, rgba(255, 107, 91, 0.52) 0%, rgba(255, 90, 70, 0.22) 45%, transparent 68%),
+    /* Secondary softer diffuse coral bloom — upper-centre */
+    radial-gradient(ellipse 55% 45% at 55% 10%, rgba(255, 120, 90, 0.20) 0%, transparent 60%),
+    /* Navy depth layer — upper-left cool anchor */
+    radial-gradient(ellipse 60% 55% at 10% 20%, rgba(31, 47, 82, 0.65) 0%, rgba(20, 33, 61, 0.25) 45%, transparent 65%),
+    /* Base dark navy gradient */
+    linear-gradient(175deg, #070b15 0%, #0a0e1a 45%, #0f1829 100%);
+}
+
+/* Vertical fluted glass ribbed texture overlay */
+.fluted-glass-overlay {
+  position: absolute;
+  inset: 0;
+  background-image: repeating-linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0.045) 0px,
+    rgba(255, 255, 255, 0.045) 2px,
+    transparent 2px,
+    transparent 14px
+  );
+  mask-image: linear-gradient(180deg, rgba(0, 0, 0, 0.85) 0%, rgba(0, 0, 0, 0.6) 60%, rgba(0, 0, 0, 0.25) 100%);
+  -webkit-mask-image: linear-gradient(180deg, rgba(0, 0, 0, 0.85) 0%, rgba(0, 0, 0, 0.6) 60%, rgba(0, 0, 0, 0.25) 100%);
+  pointer-events: none;
+}
+
+/* Glass card styling (max 3 backdrop-filters per screen for performance) */
+.glass {
+  background: rgba(20, 33, 61, 0.82);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow: 0 16px 40px -10px rgba(7, 12, 23, 0.45);
+}
+
+@supports (backdrop-filter: blur(16px)) {
+  .glass {
+    background: rgba(20, 33, 61, 0.65);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+  }
+}
+
+.glass-pill {
+  background: rgba(12, 19, 34, 0.85);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.35);
+}
+
+@supports (backdrop-filter: blur(16px)) {
+  .glass-pill {
+    background: rgba(12, 19, 34, 0.65);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+  }
+}
+
+/* Coral pill button utility */
+.btn-coral {
+  background-color: var(--coral);
+  color: var(--navy);
+  font-weight: 700;
+  border-radius: 9999px;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 0 4px 14px rgba(255, 107, 91, 0.35);
+}
+
+.btn-coral:hover {
+  background-color: var(--coral-hover);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(255, 107, 91, 0.45);
+}
+
+.btn-coral:active {
+  background-color: var(--coral-pressed);
+  transform: translateY(0);
+}
+
+/* Focus styles: 2px coral with a navy offset */
+:focus-visible {
+  outline: 2px solid var(--coral);
+  outline-offset: 2px;
+}
+
+/* Disable hover lifts and heavy transitions on reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  *, ::before, ::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+  .btn-coral:hover {
+    transform: none !important;
+  }
 }
 
 /* Leaflet container fixes */
 .leaflet-container {
   width: 100%;
   height: 100%;
-  border-radius: 0.5rem;
+  border-radius: 20px;
   z-index: 10;
 }
-
-/* Animations */
-@keyframes pulse-subtle {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.5; }
+/* ------------------------------------------------------------ */
+/* Header: fully transparent – atmosphere runs behind the pill nav */
+.glass-header {
+  background: transparent;
+  border-bottom: none;
 }
 
-.animate-pulse-subtle {
-  animation: pulse-subtle 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+/* Ensure text utilities resolve correctly in forced dark mode */
+/* text-white utilities */
+html:not(.dark) .text-white,
+html:not(.dark) .text-white\/70,
+html:not(.dark) .text-white\/40,
+html:not(.dark) .text-white\/60,
+html:not(.dark) .text-white\/50 {
+  color: var(--foreground) !important;
+}
+.dark .text-white { color: #fff !important; }
+
+/* navy text utilities – replace with cream in dark mode, EXCEPT inside cream surfaces */
+.dark :not(.cream-surface):not(.cream-surface *) > .text-\[\#14213d\],
+.dark :not(.cream-surface):not(.cream-surface *) > .text-\[\#14213d\]\/60,
+.dark :not(.cream-surface):not(.cream-surface *) > .text-\[\#14213d\]\/70,
+.dark :not(.cream-surface):not(.cream-surface *) > .text-\[\#14213d\]\/50 {
+  color: var(--cream) !important;
+}
+
+/* Cream surface section – strictly dark navy text with AA contrast */
+.cream-surface {
+  background-color: #f4ede0 !important;
+  color: #14213d !important;
+}
+.cream-surface h1,
+.cream-surface h2,
+.cream-surface h3,
+.cream-surface h4 {
+  color: #14213d !important;
+}
+.cream-surface p {
+  color: #3e4c63 !important;
+}
+.cream-surface .cream-card-light {
+  background-color: #ffffff !important;
+  color: #14213d !important;
+  border-color: rgba(20, 33, 61, 0.12) !important;
+}
+.cream-surface .cream-card-light h3 {
+  color: #14213d !important;
+}
+.cream-surface .cream-card-light p {
+  color: #53627a !important;
+}
+.cream-surface .cream-card-dark {
+  background-color: #14213d !important;
+  color: #f4ede0 !important;
+}
+.cream-surface .cream-card-dark h3 {
+  color: #f4ede0 !important;
+}
+.cream-surface .cream-card-dark p {
+  color: rgba(244, 237, 224, 0.75) !important;
+}
+.cream-surface .cream-pill {
+  background-color: rgba(20, 33, 61, 0.08) !important;
+  border-color: rgba(20, 33, 61, 0.15) !important;
+  color: #14213d !important;
+}
+.cream-surface .step-num-dark {
+  color: rgba(20, 33, 61, 0.25) !important;
+}
+.cream-surface .step-num-light {
+  color: rgba(244, 237, 224, 0.3) !important;
+}
+
+/* Pulsing "live" dot for triage panel */
+@keyframes live-pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.55; transform: scale(1.35); }
+}
+.live-dot {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 9999px;
+  background-color: #ff6b5b;
+  animation: live-pulse 1.6s ease-in-out infinite;
+}
+
+/* font-mono → JetBrains Mono only for tracking codes / numeric badges */
+.font-mono {
+  font-family: var(--font-mono), 'Courier New', monospace;
+}
+
+/* Micro-animations and Smooth Entrance Effects */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+@keyframes softGlow {
+  0%, 100% {
+    box-shadow: 0 0 15px rgba(255, 107, 91, 0.2);
+  }
+  50% {
+    box-shadow: 0 0 25px rgba(255, 107, 91, 0.45);
+  }
+}
+
+.animate-fade-in-up {
+  animation: fadeInUp 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.animate-shimmer {
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0.03) 0%,
+    rgba(255, 255, 255, 0.12) 50%,
+    rgba(255, 255, 255, 0.03) 100%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 2s infinite ease-in-out;
+}
+
+.card-hover-lift {
+  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.25s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.25s ease;
+}
+
+.card-hover-lift:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 30px -10px rgba(7, 12, 23, 0.3);
+  border-color: rgba(255, 107, 91, 0.3);
+}
+
+.badge-glow {
+  animation: softGlow 2.5s infinite ease-in-out;
 }

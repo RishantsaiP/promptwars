@@ -35,9 +35,11 @@ export class JsonFileRepository implements IssueRepository {
   private dataDir: string;
   private filePath: string;
   private memoryCache: Issue[] | null = null;
+  private lastMtimeMs: number = 0;
 
   constructor() {
-    this.dataDir = path.join(process.cwd(), 'data');
+    const isVercel = Boolean(process.env.VERCEL || process.env.AWS_LAMBDA_FUNCTION_NAME);
+    this.dataDir = isVercel ? path.join('/tmp', 'data') : path.join(process.cwd(), 'data');
     this.filePath = path.join(this.dataDir, 'issues.json');
   }
 
@@ -51,22 +53,32 @@ export class JsonFileRepository implements IssueRepository {
   }
 
   private readAll(): Issue[] {
-    if (this.memoryCache) return this.memoryCache;
     this.ensureFile();
     try {
+      const stat = fs.statSync(this.filePath);
+      if (this.memoryCache && stat.mtimeMs === this.lastMtimeMs) {
+        return this.memoryCache;
+      }
       const raw = fs.readFileSync(this.filePath, 'utf-8');
       this.memoryCache = JSON.parse(raw);
+      this.lastMtimeMs = stat.mtimeMs;
       return this.memoryCache || [];
     } catch (err) {
       console.error('[JsonStore] Error reading file, resetting cache:', err);
-      return [];
+      return this.memoryCache || [];
     }
   }
 
   private writeAll(issues: Issue[]): void {
-    this.memoryCache = issues;
     this.ensureFile();
     fs.writeFileSync(this.filePath, JSON.stringify(issues, null, 2), 'utf-8');
+    try {
+      const stat = fs.statSync(this.filePath);
+      this.lastMtimeMs = stat.mtimeMs;
+    } catch {
+      // ignore stat error
+    }
+    this.memoryCache = issues;
   }
 
   public initialize(): void {

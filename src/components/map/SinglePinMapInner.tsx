@@ -6,7 +6,7 @@ import L from 'leaflet';
 
 const customPinIcon = L.divIcon({
   className: 'custom-leaflet-marker',
-  html: `<div style="background-color: #1b4d3e; width: 32px; height: 32px; border-radius: 50% 50% 50% 0; transform: rotate(-45deg); display: flex; align-items: center; justify-content: center; border: 3px solid white; box-shadow: 0 4px 6px rgba(0,0,0,0.3);"><div style="width: 10px; height: 10px; background: white; border-radius: 50%; transform: rotate(45deg);"></div></div>`,
+  html: `<div style="background-color: #ff6b5b; width: 32px; height: 32px; border-radius: 50% 50% 50% 0; transform: rotate(-45deg); display: flex; align-items: center; justify-content: center; border: 3px solid #14213d; box-shadow: 0 4px 8px rgba(20,33,61,0.3);"><div style="width: 10px; height: 10px; background: #14213d; border-radius: 50%; transform: rotate(45deg);"></div></div>`,
   iconSize: [32, 32],
   iconAnchor: [16, 32],
   popupAnchor: [0, -32],
@@ -24,7 +24,7 @@ export default function SinglePinMapInner({
   address: string;
 }) {
   return (
-    <div className="w-full h-64 rounded-xl overflow-hidden border border-slate-200 dark:border-slate-800 shadow-sm">
+    <div className="w-full h-64 rounded-[20px] overflow-hidden border border-[#14213d]/15 dark:border-white/15 shadow-sm">
       <MapContainer
         center={[latitude, longitude]}
         zoom={15}

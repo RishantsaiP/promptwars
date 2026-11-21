@@ -58,7 +58,12 @@ ${locations.join('\n')}
 Output format: Return a JSON array with exactly 5 strings (bullet points). Each bullet point should be 1-2 sharp, actionable, authoritative sentences.`;
 
         const modelId = getGeminiModelId();
-        const response = await client.models.generateContent({
+
+        // 12-second hard timeout so the modal never hangs
+        const timeoutPromise = new Promise<never>((_, reject) =>
+          setTimeout(() => reject(new Error('Gemini briefing timed out')), 12000)
+        );
+        const geminiPromise = client.models.generateContent({
           model: modelId,
           contents: prompt,
           config: {
@@ -66,6 +71,8 @@ Output format: Return a JSON array with exactly 5 strings (bullet points). Each 
             temperature: 0.2,
           },
         });
+
+        const response = await Promise.race([geminiPromise, timeoutPromise]);
 
         if (response.text) {
           const parsed = JSON.parse(response.text);

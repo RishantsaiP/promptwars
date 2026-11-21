@@ -14,8 +14,8 @@ interface SinglePinMapProps {
 const DynamicSinglePinMap = dynamic(() => import('./SinglePinMapInner'), {
   ssr: false,
   loading: () => (
-    <div className="w-full h-64 rounded-xl bg-slate-100 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700 flex items-center justify-center text-slate-400 gap-2">
-      <Loader2 className="w-6 h-6 animate-spin text-emerald-600" />
+    <div className="w-full h-64 rounded-[20px] bg-[#e6dcce]/40 dark:bg-[#14213d]/60 border border-[#14213d]/15 dark:border-white/15 flex items-center justify-center text-[#14213d]/60 dark:text-[#f4ede0]/60 gap-2">
+      <Loader2 className="w-6 h-6 animate-spin text-[#ff6b5b]" />
       <span className="text-xs">Loading incident location map...</span>
     </div>
   ),
